@@ -1,6 +1,7 @@
 using Microsoft.EntityFrameworkCore;
 using ProfileApi.Data;
 using ProfileApi.Services.Implimentation;
+using ProfileApi.Services.Interfaces;
 
 namespace ProfileApi
 {
@@ -17,7 +18,7 @@ namespace ProfileApi
             });
 
             // Add services to the container.
-            builder.Services.AddScoped<ExternalApiService, ExternalApiService>();
+            builder.Services.AddScoped<IExternalApiService, ExternalApiService>();
             builder.Services.AddControllers();
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
@@ -34,9 +35,6 @@ namespace ProfileApi
             });
 
             // CREATE DIRECTORY FIRST
-            // Ensure we have a directory (default to "/tmp"). Previously this used a file-like
-            // default and combined an absolute path which could result in creating a directory
-            // named "profiles.db" and then attempting to open it as a SQLite file.
             var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/tmp";
             if (!Directory.Exists(dbFolder))
             {
@@ -55,8 +53,7 @@ namespace ProfileApi
                 client.Timeout = TimeSpan.FromSeconds(10);
             });
 
-            var port = Environment.GetEnvironmentVariable("PORT") ?? "8080";
-            builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+ 
 
             var app = builder.Build();
 

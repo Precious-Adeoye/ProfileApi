@@ -16,7 +16,7 @@ namespace ProfileApi.Controllers
         private readonly AppDbContext _context;
         private readonly IExternalApiService _apiService;
 
-        public ProfilesController(AppDbContext context, ExternalApiService apiService)
+        public ProfilesController(AppDbContext context, IExternalApiService apiService)
         {
             _context = context;
             _apiService = apiService;
