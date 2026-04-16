@@ -34,14 +34,14 @@ namespace ProfileApi
             });
 
             // CREATE DIRECTORY FIRST
-            var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/tmp/data/profiles.db";
+            var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/tmp/profiles.db";
             if (!Directory.Exists(dbFolder))
             {
                 Directory.CreateDirectory(dbFolder);
             }
 
             // SQLite configuration for deployment on PXXL
-            var dbPath = Path.Combine(dbFolder, "profiles.db");
+            var dbPath = Path.Combine(dbFolder, "/tmp/profiles.db");
             var connectionString = $"Data Source={dbPath}";
 
             builder.Services.AddDbContext<AppDbContext>(options =>
