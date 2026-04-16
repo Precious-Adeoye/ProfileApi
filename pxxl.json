@@ -1,0 +1,12 @@
+{
+    "name": "profile-api",
+    "type": "dotnet",
+    "framework": "net8.0",
+    "entrypoint": "Program.cs",
+    "environment": "production",
+    "port": 8080,
+    "env": {
+      "ASPNETCORE_ENVIRONMENT": "Production"
+    }
+  
+}
