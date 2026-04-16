@@ -34,14 +34,17 @@ namespace ProfileApi
             });
 
             // CREATE DIRECTORY FIRST
-            var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/tmp/profiles.db";
+            // Ensure we have a directory (default to "/tmp"). Previously this used a file-like
+            // default and combined an absolute path which could result in creating a directory
+            // named "profiles.db" and then attempting to open it as a SQLite file.
+            var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/tmp";
             if (!Directory.Exists(dbFolder))
             {
                 Directory.CreateDirectory(dbFolder);
             }
 
             // SQLite configuration for deployment on PXXL
-            var dbPath = Path.Combine(dbFolder, "/tmp/profiles.db");
+            var dbPath = Path.Combine(dbFolder, "profiles.db");
             var connectionString = $"Data Source={dbPath}";
 
             builder.Services.AddDbContext<AppDbContext>(options =>
