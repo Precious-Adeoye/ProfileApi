@@ -1,11 +1,8 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfileApi.Data;
 using ProfileApi.Models.Entities;
-using ProfileApi.Services.Implimentation;
 using ProfileApi.Services.Interfaces;
-using static ProfileApi.Models.Dtos.ExternalApiResponse;
 
 namespace ProfileApi.Controllers
 {
@@ -27,10 +24,7 @@ namespace ProfileApi.Controllers
         public async Task<IActionResult> CreateProfile([FromBody] CreateProfileRequest request)
         {
             // Validation
-            if (request?.Name == null)
-                return BadRequest(new { status = "error", message = "Missing or empty name" });
-
-            if (string.IsNullOrWhiteSpace(request.Name))
+            if (request?.Name == null || string.IsNullOrWhiteSpace(request.Name))
                 return BadRequest(new { status = "error", message = "Missing or empty name" });
 
             // Check for existing profile (Idempotency)
@@ -59,13 +53,13 @@ namespace ProfileApi.Controllers
                 {
                     Id = Guid.NewGuid(),
                     Name = request.Name,
-                    Gender = gender,
-                    GenderProbability = genderProb,
-                    SampleSize = sampleSize,
-                    Age = age,
-                    AgeGroup = ageGroup,
-                    CountryId = countryId,
-                    CountryProbability = countryProb,
+                    Gender = gender ?? "unknown",
+                    GenderProbability = genderProb ?? 0,
+                    SampleSize = sampleSize ?? 0,
+                    Age = age ?? 0,
+                    AgeGroup = ageGroup ?? "unknown",
+                    CountryId = countryId?.ToUpper() ?? "unknown",
+                    CountryProbability = countryProb ?? 0,
                     CreatedAt = DateTime.UtcNow
                 };
 
@@ -74,13 +68,17 @@ namespace ProfileApi.Controllers
 
                 return StatusCode(201, new { status = "success", data = profile });
             }
-            catch (Exception ex) when (ex.Message.Contains("Genderize") ||
-                                        ex.Message.Contains("Agify") ||
-                                        ex.Message.Contains("Nationalize"))
+            catch (Exception ex)
             {
-                return StatusCode(502, new { status = "error", message = ex.Message });
-            }
+                if (ex.Message.Contains("Genderize"))
+                    return StatusCode(502, new { status = "error", message = "Genderize returned an invalid response" });
+                if (ex.Message.Contains("Agify"))
+                    return StatusCode(502, new { status = "error", message = "Agify returned an invalid response" });
+                if (ex.Message.Contains("Nationalize"))
+                    return StatusCode(502, new { status = "error", message = "Nationalize returned an invalid response" });
 
+                return StatusCode(500, new { status = "error", message = ex.Message });
+            }
         }
 
         // GET /api/profiles/{id}
@@ -105,16 +103,13 @@ namespace ProfileApi.Controllers
             var query = _context.Profiles.AsQueryable();
 
             if (!string.IsNullOrEmpty(gender))
-                query = query.Where(p => p.Gender != null &&
-                    p.Gender.ToLower() == gender.ToLower());
+                query = query.Where(p => p.Gender != null && p.Gender.ToLower() == gender.ToLower());
 
             if (!string.IsNullOrEmpty(country_id))
-                query = query.Where(p => p.CountryId != null &&
-                    p.CountryId.ToUpper() == country_id.ToUpper());
+                query = query.Where(p => p.CountryId != null && p.CountryId.ToUpper() == country_id.ToUpper());
 
             if (!string.IsNullOrEmpty(age_group))
-                query = query.Where(p => p.AgeGroup != null &&
-                    p.AgeGroup.ToLower() == age_group.ToLower());
+                query = query.Where(p => p.AgeGroup != null && p.AgeGroup.ToLower() == age_group.ToLower());
 
             var profiles = await query
                 .Select(p => new
@@ -148,8 +143,12 @@ namespace ProfileApi.Controllers
             _context.Profiles.Remove(profile);
             await _context.SaveChangesAsync();
 
-            return NoContent(); // 204
+            return NoContent();
         }
     }
 }
 
+public class CreateProfileRequest
+{
+    public string Name { get; set; } = string.Empty;
+}
