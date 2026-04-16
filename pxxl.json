@@ -2,7 +2,7 @@
     "name": "profile-api",
     "type": "dotnet",
     "framework": "net9.0",
-    "entrypoint": "Program.cs",
+    "entrypoint": "ProfileApi.dll",
     "environment": "production",
     "port": 8080,
     "env": {
