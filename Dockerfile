@@ -11,11 +11,11 @@ WORKDIR "/src/."
 RUN dotnet build "ProfileApi.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "ProfileApi.csproj" -c Release -o /app/publish
+RUN dotnet publish "ProfileApi.csproj" -c Release -o /app/publish --no-restore
 
 FROM base AS final
 WORKDIR /app
 COPY --from=publish /app/publish .
 # Ensure SQLite can write to disk
-RUN mkdir -p /app/data && chmod 777 /app/data
+RUN mkdir -p /tmp/data && chmod 777 /tmp/data
 ENTRYPOINT ["dotnet", "ProfileApi.dll"]

@@ -34,7 +34,7 @@ namespace ProfileApi
             });
 
             // CREATE DIRECTORY FIRST
-            var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/app/data";
+            var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/tmp/data/profiles.db";
             if (!Directory.Exists(dbFolder))
             {
                 Directory.CreateDirectory(dbFolder);
