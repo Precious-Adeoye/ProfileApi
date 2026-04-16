@@ -33,8 +33,15 @@ namespace ProfileApi
                 });
             });
 
+            // CREATE DIRECTORY FIRST
+            var dbFolder = Environment.GetEnvironmentVariable("HOME") ?? "/app/data";
+            if (!Directory.Exists(dbFolder))
+            {
+                Directory.CreateDirectory(dbFolder);
+            }
+
             // SQLite configuration for deployment on PXXL
-            var dbPath = Path.Combine(Environment.GetEnvironmentVariable("HOME") ?? "/app/data", "profiles.db");
+            var dbPath = Path.Combine(dbFolder, "profiles.db");
             var connectionString = $"Data Source={dbPath}";
 
             builder.Services.AddDbContext<AppDbContext>(options =>
@@ -55,7 +62,6 @@ namespace ProfileApi
             }
 
             app.UseCors("AllowAll");
-            app.UseAuthorization();
             app.MapControllers();
 
             // Ensure database is created - FIXED async/await
