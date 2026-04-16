@@ -5,8 +5,8 @@
 A RESTful API that fetches demographic data (gender, age, nationality) from external APIs and stores enriched profiles in SQLite.
 
 ## 🔗 Links
-- **Live API:** `https://your-app.pxxl.app`
-- **GitHub Repo:** `https://github.com/yourusername/profile-api`
+- **Live API:** `https://profileapi-xmw3fq.fly.dev/`
+- **GitHub Repo:** `https://github.com/Precious-Adeoye/ProfileApi`
 
 ## 🛠️ Technologies
 - ASP.NET Core 9.0
@@ -16,7 +16,7 @@ A RESTful API that fetches demographic data (gender, age, nationality) from exte
 ## ⚡ Setup
 
 ```bash
-git clone https://github.com/yourusername/profile-api.git
+git clone https://github.com/Precious-Adeoye/ProfileApi
 cd profile-api
 dotnet restore
 dotnet run
