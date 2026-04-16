@@ -6,6 +6,6 @@
         public record AgifyResponse(int? Age);
         public record NationalizeResponse(List<CountryResponse> Country);
         public record CountryResponse(string country_id, double probability);
-        public record CreateProfileRequest(string Name);
+        
     }
 }

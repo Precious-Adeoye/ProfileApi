@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using ProfileApi.Data;
+using ProfileApi.Models.Dtos;
 using ProfileApi.Models.Entities;
 using ProfileApi.Services.Interfaces;
 
@@ -146,9 +147,4 @@ namespace ProfileApi.Controllers
             return NoContent();
         }
     }
-}
-
-public class CreateProfileRequest
-{
-    public string Name { get; set; } = string.Empty;
 }

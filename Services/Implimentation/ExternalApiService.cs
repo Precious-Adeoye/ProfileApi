@@ -49,11 +49,11 @@ namespace ProfileApi.Services.Implimentation
             if (response?.Country == null || !response.Country.Any())
                 throw new Exception("Nationalize returned an invalid response");
 
-            var topCountry = response.Country.OrderByDescending(c => c.Probability).First();
+            var topCountry = response.Country.OrderByDescending(c => c.probability).First();
 
-            Console.WriteLine($"Nationalize Response: Country={topCountry.CountryId}, Probability={topCountry.Probability}");
+            Console.WriteLine($"Nationalize Response: Country={topCountry.country_id}, Probability={topCountry.probability}");
 
-            return (topCountry.CountryId, topCountry.Probability);
+            return (topCountry.country_id, topCountry.probability);
         }
     }
 }
