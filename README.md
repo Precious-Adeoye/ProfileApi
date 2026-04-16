@@ -9,7 +9,7 @@ A RESTful API that fetches demographic data (gender, age, nationality) from exte
 - **GitHub Repo:** `https://github.com/yourusername/profile-api`
 
 ## 🛠️ Technologies
-- ASP.NET Core 8.0
+- ASP.NET Core 9.0
 - SQLite + EF Core
 - Genderize, Agify, Nationalize APIs
 
